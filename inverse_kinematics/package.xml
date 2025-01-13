@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+
+  <name>inverse_kinematics</name>
+  <version>0.0.0</version>
+  <description>Inverse kinematics solver for ENPM662 Project 2</description>
+
+  <maintainer email="aniswa@umd.edu">aniswa@umd.edu</maintainer>
+  <author email="aniswa@umd.edu">aniswa@umd.edu</author>
+
+  <license>Apache-2.0</license>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>inverse_kinematics_interfaces</depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+
+</package>

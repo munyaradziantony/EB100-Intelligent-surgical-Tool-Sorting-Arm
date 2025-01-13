@@ -1,0 +1,17 @@
+#DATAKIT Version 243
+
+newmtl mat-1
+Kd 0.888 0.888 0.000
+d 1.000000
+
+newmtl mat-6
+Kd 0.888 0.444 0.444
+d 1.000000
+
+newmtl light grey low gloss plastic6
+Kd 0.348627 0.348627 0.348627
+Ks 0.050000 0.050000 0.050000
+Ka 0.498039 0.498039 0.498039
+d 1.000000
+Ns 40.000000
+

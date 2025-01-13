@@ -1,0 +1,5 @@
+geometry_msgs/Pose pose
+---
+bool success
+---
+float64[6] next_joint_angles

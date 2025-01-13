@@ -1,0 +1,338 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+    <world name='dispensary'>
+        <!-- ================================================================= -->
+        <!--                         Physics Elements                          -->
+        <!-- ================================================================= -->
+        <physics name="1ms" type="ode">
+            <max_step_size>0.01</max_step_size>
+            <real_time_factor>1.0</real_time_factor>
+            <ode>
+                <solver>
+                    <type>quick</type> <!-- Use a simpler solver -->
+                    <iters>10</iters> <!-- Reduce the number of iterations -->
+                </solver>
+                <constraints>
+                    <cfm>0.5</cfm> <!-- Increase constraint force mixing -->
+                    <erp>0.1</erp> <!-- Reduce error reduction parameter -->
+                </constraints>
+            </ode>
+        </physics>
+        <plugin
+            filename="ignition-gazebo-physics-system"
+            name="ignition::gazebo::systems::Physics">
+        </plugin>
+        <plugin
+            filename="ignition-gazebo-user-commands-system"
+            name="ignition::gazebo::systems::UserCommands">
+        </plugin>
+        <plugin
+            filename="ignition-gazebo-scene-broadcaster-system"
+            name="ignition::gazebo::systems::SceneBroadcaster">
+        </plugin>
+        <plugin
+            filename="ignition-gazebo-sensors-system"
+            name="ignition::gazebo::systems::Sensors">
+            <render_engine>ogre</render_engine>
+        </plugin>
+
+        <!-- World Lighting -->
+        <light type="directional" name="sun">
+            <cast_shadows>true</cast_shadows>
+            <pose>0 0 10 0 0 0</pose>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+            <attenuation>
+                <range>1000</range>
+                <constant>0.9</constant>
+                <linear>0.01</linear>
+                <quadratic>0.001</quadratic>
+            </attenuation>
+            <direction>-0.5 0.1 -0.9</direction>
+        </light>
+
+        <!-- ================================================================= -->
+        <!--                            UI Elements                            -->
+        <!-- ================================================================= -->
+        <gui fullscreen="0">
+
+            <!-- 3D scene -->
+            <plugin filename="GzScene3D" name="3D View">
+                <ignition-gui>
+                <title>3D View</title>
+                <property type="bool" key="showTitleBar">false</property>
+                <property type="string" key="state">docked</property>
+                </ignition-gui>
+
+                <engine>ogre2</engine>
+                <scene>scene</scene>
+                <ambient_light>0.4 0.4 0.4</ambient_light>
+                <background_color>0.6 0.6 0.6</background_color>
+                <camera_pose>2 2 2 0 0.5 -2.5</camera_pose>
+            </plugin>
+
+            <!-- World Control Panel -->
+            <plugin filename="WorldControl" name="World control">
+                <ignition-gui>
+                <title>World control</title>
+                <property type="bool" key="showTitleBar">false</property>
+                <property type="bool" key="resizable">false</property>
+                <property type="double" key="height">72</property>
+                <property type="double" key="width">121</property>
+                <property type="double" key="z">1</property>
+
+                <property type="string" key="state">floating</property>
+                <anchors target="3D View">
+                    <line own="left" target="left"/>
+                    <line own="bottom" target="bottom"/>
+                </anchors>
+                </ignition-gui>
+
+                <play_pause>true</play_pause>
+                <step>true</step>
+                <start_paused>true</start_paused>
+
+            </plugin>
+
+            <!-- World Statistics Panel -->
+            <plugin filename="WorldStats" name="World stats">
+                <ignition-gui>
+                <title>World stats</title>
+                <property type="bool" key="showTitleBar">false</property>
+                <property type="bool" key="resizable">false</property>
+                <property type="double" key="height">110</property>
+                <property type="double" key="width">290</property>
+                <property type="double" key="z">1</property>
+
+                <property type="string" key="state">floating</property>
+                <anchors target="3D View">
+                    <line own="right" target="right"/>
+                    <line own="bottom" target="bottom"/>
+                </anchors>
+                </ignition-gui>
+
+                <sim_time>true</sim_time>
+                <real_time>true</real_time>
+                <real_time_factor>true</real_time_factor>
+                <iterations>true</iterations>
+            </plugin>
+
+            <!-- Joint Position Controller Panel -->
+            <plugin filename="JointPositionController" name="JointPositionController">
+                <ignition-gui>
+                <property type="double" key="height">600</property>
+                <property type="double" key="width">400</property>
+
+                <property type="string" key="state">floating</property>
+                <anchors target="3D View">
+                    <line own="right" target="right"/>
+                    <line own="top" target="top"/>
+                </anchors>
+                </ignition-gui>
+                <model_name>eb100</model_name>
+            </plugin>
+
+            <!-- Camera Tracking Panel -->
+            <plugin filename="CameraTracking" name="Camera Tracking">
+                <ignition-gui>
+                <property key="resizable" type="bool">false</property>
+                <property key="width" type="double">5</property>
+                <property key="height" type="double">5</property>
+                <property key="state" type="string">floating</property>
+                <property key="showTitleBar" type="bool">false</property>
+                </ignition-gui>
+            </plugin>
+
+            <!-- Image Display Panel -->
+            <plugin filename="ImageDisplay" name="Image Display">
+                <ignition-gui>
+                <property key="state" type="string">docked</property>
+                </ignition-gui>
+            </plugin>
+
+            <!-- Component Inspector Panel -->
+            <plugin filename="ComponentInspector" name="Component inspector">
+                <ignition-gui>
+                <property type="string" key="state">docked</property>
+                </ignition-gui>
+            </plugin>
+
+            <!-- Entity tree -->
+            <plugin filename="EntityTree" name="Entity tree">
+                <ignition-gui>
+                <property type="string" key="state">docked</property>
+                </ignition-gui>
+            </plugin>
+
+        </gui>
+
+        <!-- ================================================================= -->
+        <!--                              Objects                              -->
+        <!-- ================================================================= -->
+        <!-- Ground Plane -->
+        <model name='ground_plane'>
+            <static>true</static> <!-- This makes the ground plane static -->
+            <pose>0 0 0 0 0 0</pose>
+            <link name='ground_link'>
+                <collision name='ground_collision'>
+                    <geometry>
+                        <plane>
+                            <normal>0 0 1</normal>
+                            <size>100 100</size>
+                        </plane>
+                    </geometry>
+                </collision>
+                <visual name='ground_visual'>
+                    <geometry>
+                        <plane>
+                            <normal>0 0 1</normal>
+                            <size>100 100</size>
+                        </plane>
+                    </geometry>
+                    <material>
+                        <script>
+                            <uri>file://media/materials/scripts/gazebo.material</uri>
+                            <name>Gazebo/White</name>
+                        </script>
+                        <ambient>1 1 1 0.5</ambient> <!-- Set ambient color with transparency -->
+                        <diffuse>1 1 1 0.5</diffuse> <!-- Set diffuse color with transparency -->
+                        <specular>1 1 1 0.5</specular> <!-- Set specular color with transparency -->
+                    </material>
+                </visual>
+            </link>
+        </model>
+
+        <!-- Table -->
+        <include>
+            <name>table_link</name>
+            <uri>
+                ../models/table/table_link.sdf
+            </uri>
+            <pose>0 0 0.01 0 0 0</pose>
+        </include>
+
+        <!-- Source Tray - Reusable -->
+        <include>
+            <name>source_reusable_tray_link</name>
+            <uri>
+                ../models/tray/tray_link.sdf
+            </uri>
+            <pose>-0.40 0 0.61 0 0 0</pose>
+        </include>
+
+        <!-- Destination Tray - Reusable -->
+        <include>
+            <name>destination_resuable_tray_link</name>
+            <uri>
+                ../models/tray/tray_link.sdf
+            </uri>
+            <pose>0.40 0 0.61 0 0 0</pose>
+        </include>
+
+        <!-- Destination Tray - Disposable -->
+        <include>
+            <name>source_disposable_tray_link</name>
+            <uri>
+                ../models/tray/tray_link.sdf
+            </uri>
+            <pose>0 -0.40 0.61 0 0 1.5708</pose>
+        </include>
+
+        <!-- Source Tray - Disposable -->
+        <include>
+            <name>destination_disposable_tray_link</name>
+            <uri>
+                ../models/tray/tray_link.sdf
+            </uri>
+            <pose>0 0.40 0.61 0 0 1.5708</pose>
+        </include>
+
+        <!-- ================================================================= -->
+        <!--                               Tools                               -->
+        <!-- ================================================================= -->
+        <!-- Syringe x 2 -->
+        <include>
+            <name>syringe1</name>
+            <uri>
+                ../models/syringe/syringe.sdf
+            </uri>
+            <pose>0.140 0.380 0.635 1.5708 1.5708 0</pose>
+        </include>
+        <include>
+            <name>syringe2</name>
+            <uri>
+                ../models/syringe/syringe.sdf
+            </uri>
+            <pose>0.200 0.380 0.635 1.5708 1.5708 0</pose>
+        </include>
+
+        <!-- Vaccine Bottle x 3 -->
+        <include>
+            <name>vaccine1</name>
+            <uri>
+                ../models/vaccine_bottle/propofol.sdf
+            </uri>
+            <pose>0.060 0.380 0.635 0 0 1.5708</pose>
+        </include>
+        <include>
+            <name>vaccine2</name>
+            <uri>
+                ../models/vaccine_bottle/ibuprofen.sdf
+            </uri>
+            <pose>0 0.380 0.635 0 0 1.5708</pose>
+        </include>
+        <include>
+            <name>vaccine3</name>
+            <uri>
+                ../models/vaccine_bottle/ibuprofen.sdf
+            </uri>
+            <pose>-0.060 0.380 0.635 0 0 1.5708</pose>
+        </include>
+
+        <!-- Scalpel x 2 -->
+        <include>
+            <name>scalpel1</name>
+            <uri>
+                ../models/scalpel/scalpel.sdf
+            </uri>
+            <pose>-0.40 -0.20 0.625 0 0 0</pose>
+        </include>
+        <include>
+            <name>scalpel2</name>
+            <uri>
+                ../models/scalpel/scalpel.sdf
+            </uri>
+            <pose>-0.40 -0.15 0.625 0 0 0</pose>
+        </include>
+
+        <!-- Scissors x 1 -->
+        <include>
+            <name>scissors1</name>
+            <uri>
+                ../models/scissors/scissors.sdf
+            </uri>
+            <pose>-0.40 0 0.625 1.5708 -1.5708 0</pose>
+        </include>
+
+        <!-- Tweezer x 1 -->
+        <include>
+            <name>tweezer1</name>
+            <uri>
+                ../models/tweezer/tweezer.sdf
+            </uri>
+            <pose>-0.40 0.1 0.625 1.5708 -1.5708 0</pose>
+        </include>
+
+        <!-- ================================================================= -->
+        <!--                               Robot                               -->
+        <!-- ================================================================= -->
+        <include>
+            <name>eb100</name>
+            <uri>
+                ../models/robot_arm/eb100.sdf
+            </uri>
+            <pose>0 0 0.6 0 0 0</pose>
+        </include>
+
+    </world>
+</sdf>

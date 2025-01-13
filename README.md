@@ -172,7 +172,7 @@ cd ~/ros2_ws/src
 
 2. Clone the repository:
 ```
-git clone https://github.com/Arthav24/surgicalBot.git
+git clone git@github.com:munyaradziantony/EB100-Intelligent-surgical-Tools-Sorting-Arm.git
 cd ~/ros2_ws
 ```
 
